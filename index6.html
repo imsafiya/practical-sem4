@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Employee Form by Safiya</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .form-container, .dataset {
+            max-width: 600px;
+            margin: 20px auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .form-container h2, .dataset h2 {
+            margin-top: 0;
+            color: #333;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .form-group textarea {
+            resize: vertical;
+        }
+        .error {
+            color: red;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+        button {
+            background-color: #28a745;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+        tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+    </style>
+    <script>
+        let employees = [];
+
+        function validateForm() {
+            let isValid = true;
+            const fields = ['name', 'email', 'mobile', 'address', 'salary'];
+            fields.forEach(field => {
+                const value = document.getElementById(field).value.trim();
+                const error = document.getElementById(field + 'Error');
+                error.textContent = '';
+                if (field === 'name' && (!value || !/^[a-zA-Z\s]+$/.test(value))) {
+                    error.textContent = 'Valid name required (letters and spaces only).'; isValid = false;
+                }
+                if (field === 'email' && (!value || !/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(value))) {
+                    error.textContent = 'Valid email required.'; isValid = false;
+                }
+                if (field === 'mobile' && (!value || !/^\d{10}$/.test(value))) {
+                    error.textContent = 'Valid 10-digit mobile number required.'; isValid = false;
+                }
+                if (field === 'address' && !value) {
+                    error.textContent = 'Address required.'; isValid = false;
+                }
+                if (field === 'salary' && (!value || isNaN(value) || value <= 0)) {
+                    error.textContent = 'Valid salary required.'; isValid = false;
+                }
+            });
+
+            if (isValid) {
+                const employee = fields.reduce((acc, field) => ({ ...acc, [field]: document.getElementById(field).value.trim() }), {});
+                employees.push(employee);
+                displayDataset();
+            }
+            return isValid;
+        }
+
+        function displayDataset() {
+            const tbody = document.getElementById('datasetBody');
+            tbody.innerHTML = employees.map((employee, index) => `
+                <tr>
+                    <td>${index + 1}</td>
+                    <td>${employee.name}</td>
+                    <td>${employee.email}</td>
+                    <td>${employee.mobile}</td>
+                    <td>${employee.address}</td>
+                    <td>${employee.salary}</td>
+                </tr>`).join('');
+        }
+    </script>
+</head>
+<body>
+
+<div class="form-container">
+    <h2>Employee Form by SAFIYA</h2>
+    <form onsubmit="return validateForm()">
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" id="name">
+            <div id="nameError" class="error"></div>
+        </div>
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="text" id="email">
+            <div id="emailError" class="error"></div>
+        </div>
+        <div class="form-group">
+            <label for="mobile">Mobile:</label>
+            <input type="text" id="mobile">
+            <div id="mobileError" class="error"></div>
+        </div>
+        <div class="form-group">
+            <label for="address">Address:</label>
+            <textarea id="address"></textarea>
+            <div id="addressError" class="error"></div>
+        </div>
+        <div class="form-group">
+            <label for="salary">Salary:</label>
+            <input type="text" id="salary">
+            <div id="salaryError" class="error"></div>
+        </div>
+        <button type="submit">Submit</button>
+    </form>
+</div>
+
+<div class="dataset">
+    <h2>Employee Dataset</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Mobile</th>
+                <th>Address</th>
+                <th>Salary</th>
+            </tr>
+        </thead>
+        <tbody id="datasetBody"></tbody>
+    </table>
+</div>
+
+</body>
+</html>
